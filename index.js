@@ -28,7 +28,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
    try{
      await client.connect();
      const carCollention = client.db('carCollections').collection('car');
-    //  Products Collection working here
+    //  -----Products Collection working here----
     app.get('/products', async (req, res) => { 
       const query = {} ;
       const cursor = carCollention.find(query);
@@ -36,7 +36,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       // console.log(product);
       res.send(product);
     });
-    // find product id
+    // --------find One product id--------...
     app.get('/products/:id' , async(req , res )=>{
       const id = req.params.id;
       // console.log(id);
@@ -44,6 +44,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       const products = await carCollention.findOne(query);
       res.send(products);
     })
+    // delete items here----
 
    }
    finally{
