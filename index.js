@@ -21,10 +21,20 @@ app.use(express.json());
 
 
 
-const uri = "mongodb+srv://carsUser2022:<password>@cluster0.s6inp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.db_USER}:${process.env.db_PASS}@cluster0.s6inp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
  async function run(){
    try{
+     await client.connect();
+     const carCollention = client.db('carCollections').collection('car');
+    //  Products Collection working here
+    app.get('/products', async (req, res) => { 
+      const query = {} ;
+      const cursor = carCollention.find(query);
+      const product = await cursor.toArray();
+      console.log(product);
+      res.send(product);
+    });
 
    }
    finally{
