@@ -1,8 +1,9 @@
 
 
-const { MongoClient, ServerApiVersion, Collection } = require('mongodb');
+const { MongoClient, ServerApiVersion, Collection, ObjectId } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
+const { query } = require('express');
 require('dotenv').config();
 const port = process.env.PORT || 8000;
 const app = express();
@@ -32,9 +33,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       const query = {} ;
       const cursor = carCollention.find(query);
       const product = await cursor.toArray();
-      console.log(product);
+      // console.log(product);
       res.send(product);
     });
+    // find product id
+    app.get('/products/:id' , async(req , res )=>{
+      const id = req.params.id;
+      // console.log(id);
+      const query = {_id: ObjectId(id)};
+      const products = await carCollention.findOne(query);
+      res.send(products);
+    })
 
    }
    finally{
