@@ -57,6 +57,25 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       const result = await carCollention.insertOne(newCar);
       res.send(result)
     })
+    // add new Quantity Or Stock
+    app.put('/products/:id' , async (req ,res) =>{
+      const id = req.params.id;
+      // console.log(id);
+      const quantity = req.body;
+      // console.log(quantity);
+      const query = {_id: ObjectId(id)};
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          stock:quantity.newStock
+        },
+      };
+      // console.log(updateDoc);
+        const result = await carCollention.updateOne
+        (query,updateDoc,options);
+        res. send (result) ;
+        
+    })
 
    }
    finally{
