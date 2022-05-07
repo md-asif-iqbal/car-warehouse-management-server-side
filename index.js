@@ -45,6 +45,18 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       res.send(products);
     })
     // delete items here----
+    app.delete('/products/:id', async(req , res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await carCollention.deleteOne(query);
+      res.send(result)
+    })
+    //  add New Items here......
+    app.post('/products', async (req , res) =>{
+      const newCar = req.body;
+      const result = await carCollention.insertOne(newCar);
+      res.send(result)
+    })
 
    }
    finally{
@@ -61,3 +73,5 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
  app.listen(port , () =>{
    console.log('Server is running to port' , port);
  });
+
+//  npx kill-port 8000
