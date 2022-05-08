@@ -14,7 +14,20 @@ app.use(express.json());
 
 
 // Verify Token of JWT Function
-
+function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+      return res.status(401).send({ message: 'Unauthorized access' });
+  }
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, process.env.a_t_s, (error, decoded) => {
+      if (error) {
+          return res.status(403).send({ message: 'Forbidden access' });
+      }
+      req.decoded = decoded;
+      next();
+  })
+}
 
 
 
@@ -82,14 +95,19 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 
     // -----My Items here ------
-    app.get('/items', async (req, res) => { 
+    app.get('/items', verifyToken, async (req, res) => { 
       const decodedEmail = req.decoded.email;
       const email = req.query.email;
       console.log(email);
-      const query= { email: email };
-      const cursor = carCollention.find(query);
-      const product = await cursor.toArray();
-      res.send(product);
+      if(email===decodedEmail){
+        const query= { email: email };
+        const cursor = carCollention.find(query);
+        const product = await cursor.toArray();
+        res.send(product);
+      }
+      else{
+        res.status(403).send({message: 'forbidden access'})
+      }
     });
 
     // Auth -----token
