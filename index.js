@@ -131,7 +131,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
  });
 
  app.listen(port , () =>{
-   console.log('Server is ' , port);
+   console.log('Server is runing' , port);
  });
 
 //  npx kill-port 8000
