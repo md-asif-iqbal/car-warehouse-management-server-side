@@ -2,6 +2,7 @@
 
 const { MongoClient, ServerApiVersion, Collection, ObjectId } = require('mongodb');
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const { query } = require('express');
 require('dotenv').config();
@@ -12,6 +13,7 @@ app.use(express.json());
 
 
 
+// Verify Token of JWT Function
 
 
 
@@ -19,7 +21,7 @@ app.use(express.json());
 // USER: carsUser2022
 // PASS: TMMjvmLhkv2XOrMh
 
-
+// access token: 40ae131e80141d03443d4026f41019b7e075393ed0e60d1dd3c65262f02fd543d1677af508533d5b0d93df1511d0ced94140b2a3cc3770f77069d3eb46506093
 
 
 const uri = `mongodb+srv://${process.env.db_USER}:${process.env.db_PASS}@cluster0.s6inp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -54,6 +56,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
     //  add New Items here......
     app.post('/products', async (req , res) =>{
       const newCar = req.body;
+      console.log(newCar);
       const result = await carCollention.insertOne(newCar);
       res.send(result)
     })
@@ -73,10 +76,30 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       // console.log(updateDoc);
         const result = await carCollention.updateOne
         (query,updateDoc,options);
-        res. send (result) ;
+        res.send(result) ;
         
     })
 
+
+    // -----My Items here ------
+    app.get('/items', async (req, res) => { 
+      const decodedEmail = req.decoded.email;
+      const email = req.query.email;
+      console.log(email);
+      const query= { email: email };
+      const cursor = carCollention.find(query);
+      const product = await cursor.toArray();
+      res.send(product);
+    });
+
+    // Auth -----token
+    app.post('/login', async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.a_t_s, {
+          expiresIn: '5d'
+      });
+      res.send({ token });
+  })
    }
    finally{
 
