@@ -126,7 +126,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
  run().catch(console.dir);
  
  app.get('/' , (req , res)=>{
-   res.send('Car Collection server is running');
+   res.send('Car Collection server running');
 
  });
 
